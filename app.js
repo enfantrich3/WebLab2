@@ -117,8 +117,22 @@ function createTaskItem(task) {
   }
   info.append(text, date);
 
-  item.append(info);
+  const deleteButton = createElement('button', 'btn btn--delete', 'Удалить');
+  deleteButton.type = 'button';
+  deleteButton.addEventListener('click', function () {
+    deleteTask(task.id);
+  });
+
+  item.append(info, deleteButton);
   return item;
+}
+
+// удаление задачи
+function deleteTask(id) {
+  tasks = tasks.filter(function (task) {
+    return task.id !== id;
+  });
+  renderTasks();
 }
 
 // вывод списка
