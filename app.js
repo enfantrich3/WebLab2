@@ -92,3 +92,69 @@ const footerText = createElement('p', 'footer__text', '© 2026 ToDo List');
 footer.append(footerText);
 
 document.body.append(header, main, footer);
+
+// задачи
+let tasks = [];
+
+// формат даты
+function formatDate(date) {
+  if (!date) {
+    return 'Без даты';
+  }
+  const parts = date.split('-');
+  return parts[2] + '.' + parts[1] + '.' + parts[0];
+}
+
+// создание задачи в списке
+function createTaskItem(task) {
+  const item = createElement('li', 'task');
+
+  const info = createElement('div', 'task__info');
+  const text = createElement('span', 'task__text', task.text);
+  const date = createElement('time', 'task__date', formatDate(task.date));
+  if (task.date) {
+    date.dateTime = task.date;
+  }
+  info.append(text, date);
+
+  item.append(info);
+  return item;
+}
+
+// вывод списка
+function renderTasks() {
+  taskList.innerHTML = '';
+
+  tasks.forEach(function (task) {
+    taskList.append(createTaskItem(task));
+  });
+
+  if (tasks.length === 0) {
+    emptyText.style.display = 'block';
+  } else {
+    emptyText.style.display = 'none';
+  }
+}
+
+// добавление задачи
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const text = textInput.value.trim();
+  if (text === '') {
+    return;
+  }
+
+  const task = {
+    id: Date.now(),
+    text: text,
+    date: dateInput.value,
+    done: false
+  };
+
+  tasks.push(task);
+  form.reset();
+  renderTasks();
+});
+
+renderTasks();
