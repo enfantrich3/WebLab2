@@ -1,3 +1,9 @@
+// подключение стилей
+const styleLink = document.createElement('link');
+styleLink.rel = 'stylesheet';
+styleLink.href = 'style.css';
+document.head.append(styleLink);
+
 // создание элемента
 function createElement(tag, className, text) {
   const element = document.createElement(tag);
