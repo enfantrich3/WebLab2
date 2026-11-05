@@ -182,6 +182,19 @@ body {
   flex-grow: 1;
 }
 
+/* перетаскивание */
+.task[draggable="true"] {
+  cursor: grab;
+}
+
+.task--dragging {
+  opacity: 0.4;
+}
+
+.task--over {
+  border: 2px dashed #e8638f;
+}
+
 /* выполненная задача */
 .task--done {
   background-color: #f7e9ee;

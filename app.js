@@ -96,6 +96,7 @@ document.body.append(header, main, footer);
 // задачи
 let tasks = [];
 let editId = null;
+let dragId = null;
 
 // формат даты
 function formatDate(date) {
@@ -115,6 +116,11 @@ function createTaskItem(task) {
   const item = createElement('li', 'task');
   if (task.done) {
     item.classList.add('task--done');
+  }
+
+  if (sortSelect.value === 'none') {
+    item.draggable = true;
+    addDragEvents(item, task);
   }
 
   const checkbox = createElement('input', 'task__checkbox');
@@ -182,6 +188,52 @@ function createEditItem(task) {
   buttons.append(saveButton, cancelButton);
   item.append(textField, dateField, buttons);
   return item;
+}
+
+// перетаскивание
+function addDragEvents(item, task) {
+  item.addEventListener('dragstart', function (event) {
+    dragId = task.id;
+    event.dataTransfer.setData('text/plain', task.id);
+    item.classList.add('task--dragging');
+  });
+
+  item.addEventListener('dragend', function () {
+    item.classList.remove('task--dragging');
+  });
+
+  item.addEventListener('dragover', function (event) {
+    event.preventDefault();
+    item.classList.add('task--over');
+  });
+
+  item.addEventListener('dragleave', function () {
+    item.classList.remove('task--over');
+  });
+
+  item.addEventListener('drop', function (event) {
+    event.preventDefault();
+    item.classList.remove('task--over');
+    moveTask(dragId, task.id);
+  });
+}
+
+// смена порядка
+function moveTask(fromId, toId) {
+  if (fromId === toId) {
+    return;
+  }
+
+  const fromIndex = tasks.findIndex(function (task) {
+    return task.id === fromId;
+  });
+  const toIndex = tasks.findIndex(function (task) {
+    return task.id === toId;
+  });
+
+  const movedTask = tasks.splice(fromIndex, 1)[0];
+  tasks.splice(toIndex, 0, movedTask);
+  renderTasks();
 }
 
 // сохранение изменений
