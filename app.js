@@ -108,6 +108,16 @@ function formatDate(date) {
 // создание задачи в списке
 function createTaskItem(task) {
   const item = createElement('li', 'task');
+  if (task.done) {
+    item.classList.add('task--done');
+  }
+
+  const checkbox = createElement('input', 'task__checkbox');
+  checkbox.type = 'checkbox';
+  checkbox.checked = task.done;
+  checkbox.addEventListener('change', function () {
+    toggleTask(task.id);
+  });
 
   const info = createElement('div', 'task__info');
   const text = createElement('span', 'task__text', task.text);
@@ -123,8 +133,18 @@ function createTaskItem(task) {
     deleteTask(task.id);
   });
 
-  item.append(info, deleteButton);
+  item.append(checkbox, info, deleteButton);
   return item;
+}
+
+// отметка выполнения
+function toggleTask(id) {
+  tasks.forEach(function (task) {
+    if (task.id === id) {
+      task.done = !task.done;
+    }
+  });
+  renderTasks();
 }
 
 // удаление задачи
