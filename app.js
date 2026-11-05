@@ -219,6 +219,19 @@ function deleteTask(id) {
   renderTasks();
 }
 
+// сохранение в localStorage
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// загрузка из localStorage
+function loadTasks() {
+  const data = localStorage.getItem('tasks');
+  if (data) {
+    tasks = JSON.parse(data);
+  }
+}
+
 // вывод списка
 function renderTasks() {
   taskList.innerHTML = '';
@@ -232,6 +245,8 @@ function renderTasks() {
   } else {
     emptyText.style.display = 'none';
   }
+
+  saveTasks();
 }
 
 // добавление задачи
@@ -255,4 +270,5 @@ form.addEventListener('submit', function (event) {
   renderTasks();
 });
 
+loadTasks();
 renderTasks();
