@@ -254,7 +254,17 @@ function sortByDate(list) {
 
 // задачи для показа
 function getVisibleTasks() {
-  const list = tasks.slice();
+  let list = tasks.slice();
+
+  if (filterSelect.value === 'active') {
+    list = list.filter(function (task) {
+      return !task.done;
+    });
+  } else if (filterSelect.value === 'done') {
+    list = list.filter(function (task) {
+      return task.done;
+    });
+  }
 
   if (sortSelect.value !== 'none') {
     sortByDate(list);
@@ -273,6 +283,11 @@ function renderTasks() {
   });
 
   if (visibleTasks.length === 0) {
+    if (tasks.length === 0) {
+      emptyText.textContent = 'Задач пока нет';
+    } else {
+      emptyText.textContent = 'Ничего не найдено';
+    }
     emptyText.style.display = 'block';
   } else {
     emptyText.style.display = 'none';
@@ -303,6 +318,7 @@ form.addEventListener('submit', function (event) {
 });
 
 sortSelect.addEventListener('change', renderTasks);
+filterSelect.addEventListener('change', renderTasks);
 
 loadTasks();
 renderTasks();
