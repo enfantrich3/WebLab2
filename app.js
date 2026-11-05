@@ -232,15 +232,47 @@ function loadTasks() {
   }
 }
 
+// сортировка по дате
+function sortByDate(list) {
+  list.sort(function (a, b) {
+    if (!a.date && !b.date) {
+      return 0;
+    }
+    if (!a.date) {
+      return 1;
+    }
+    if (!b.date) {
+      return -1;
+    }
+
+    if (sortSelect.value === 'asc') {
+      return new Date(a.date) - new Date(b.date);
+    }
+    return new Date(b.date) - new Date(a.date);
+  });
+}
+
+// задачи для показа
+function getVisibleTasks() {
+  const list = tasks.slice();
+
+  if (sortSelect.value !== 'none') {
+    sortByDate(list);
+  }
+
+  return list;
+}
+
 // вывод списка
 function renderTasks() {
   taskList.innerHTML = '';
 
-  tasks.forEach(function (task) {
+  const visibleTasks = getVisibleTasks();
+  visibleTasks.forEach(function (task) {
     taskList.append(createTaskItem(task));
   });
 
-  if (tasks.length === 0) {
+  if (visibleTasks.length === 0) {
     emptyText.style.display = 'block';
   } else {
     emptyText.style.display = 'none';
@@ -269,6 +301,8 @@ form.addEventListener('submit', function (event) {
   form.reset();
   renderTasks();
 });
+
+sortSelect.addEventListener('change', renderTasks);
 
 loadTasks();
 renderTasks();
