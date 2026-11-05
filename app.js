@@ -95,6 +95,7 @@ document.body.append(header, main, footer);
 
 // задачи
 let tasks = [];
+let editId = null;
 
 // формат даты
 function formatDate(date) {
@@ -107,6 +108,10 @@ function formatDate(date) {
 
 // создание задачи в списке
 function createTaskItem(task) {
+  if (task.id === editId) {
+    return createEditItem(task);
+  }
+
   const item = createElement('li', 'task');
   if (task.done) {
     item.classList.add('task--done');
@@ -127,14 +132,73 @@ function createTaskItem(task) {
   }
   info.append(text, date);
 
+  const buttons = createElement('div', 'task__buttons');
+
+  const editButton = createElement('button', 'btn btn--edit', 'Изменить');
+  editButton.type = 'button';
+  editButton.addEventListener('click', function () {
+    editId = task.id;
+    renderTasks();
+  });
+
   const deleteButton = createElement('button', 'btn btn--delete', 'Удалить');
   deleteButton.type = 'button';
   deleteButton.addEventListener('click', function () {
     deleteTask(task.id);
   });
 
-  item.append(checkbox, info, deleteButton);
+  buttons.append(editButton, deleteButton);
+  item.append(checkbox, info, buttons);
   return item;
+}
+
+// задача в режиме редактирования
+function createEditItem(task) {
+  const item = createElement('li', 'task task--edit');
+
+  const textField = createElement('input', 'input task__edit-text');
+  textField.type = 'text';
+  textField.value = task.text;
+
+  const dateField = createElement('input', 'input task__edit-date');
+  dateField.type = 'date';
+  dateField.value = task.date;
+
+  const buttons = createElement('div', 'task__buttons');
+
+  const saveButton = createElement('button', 'btn btn--add', 'Сохранить');
+  saveButton.type = 'button';
+  saveButton.addEventListener('click', function () {
+    saveTask(task.id, textField.value.trim(), dateField.value);
+  });
+
+  const cancelButton = createElement('button', 'btn btn--delete', 'Отмена');
+  cancelButton.type = 'button';
+  cancelButton.addEventListener('click', function () {
+    editId = null;
+    renderTasks();
+  });
+
+  buttons.append(saveButton, cancelButton);
+  item.append(textField, dateField, buttons);
+  return item;
+}
+
+// сохранение изменений
+function saveTask(id, text, date) {
+  if (text === '') {
+    return;
+  }
+
+  tasks.forEach(function (task) {
+    if (task.id === id) {
+      task.text = text;
+      task.date = date;
+    }
+  });
+
+  editId = null;
+  renderTasks();
 }
 
 // отметка выполнения

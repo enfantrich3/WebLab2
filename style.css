@@ -97,6 +97,17 @@ body {
   background-color: #d14a77;
 }
 
+.btn--edit {
+  background-color: #fbd3e0;
+  color: #4a2c3a;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btn--edit:hover {
+  background-color: #f2b8cb;
+}
+
 .btn--delete {
   background-color: #fff;
   color: #d14a77;
@@ -157,6 +168,20 @@ body {
   accent-color: #e8638f;
 }
 
+.task__buttons {
+  display: flex;
+  gap: 6px;
+}
+
+/* редактирование */
+.task--edit {
+  flex-wrap: wrap;
+}
+
+.task__edit-text {
+  flex-grow: 1;
+}
+
 /* выполненная задача */
 .task--done {
   background-color: #f7e9ee;
@@ -213,5 +238,23 @@ body {
 
   .controls__search {
     grid-column: auto;
+  }
+
+  .task {
+    flex-wrap: wrap;
+  }
+
+  .task__info {
+    width: calc(100% - 30px);
+  }
+
+  .task__buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .task__edit-text,
+  .task__edit-date {
+    width: 100%;
   }
 }
