@@ -266,6 +266,13 @@ function getVisibleTasks() {
     });
   }
 
+  const search = searchInput.value.trim().toLowerCase();
+  if (search !== '') {
+    list = list.filter(function (task) {
+      return task.text.toLowerCase().includes(search);
+    });
+  }
+
   if (sortSelect.value !== 'none') {
     sortByDate(list);
   }
@@ -319,6 +326,7 @@ form.addEventListener('submit', function (event) {
 
 sortSelect.addEventListener('change', renderTasks);
 filterSelect.addEventListener('change', renderTasks);
+searchInput.addEventListener('input', renderTasks);
 
 loadTasks();
 renderTasks();
